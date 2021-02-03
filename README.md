@@ -4,6 +4,8 @@ Tiltuino is a [Arduino 33 IoT](https://store.arduino.cc/arduino-nano-33-iot) pro
 
 The project (apart from the Tilt Hydrometer) requires only the Arduino 33 IoT.
 
+![](./brewfather_custom_device.png)
+
 ![](./serial.png)
 
 ## Why?
@@ -45,7 +47,7 @@ Install [ArduinoHttpClient](https://github.com/arduino-libraries/ArduinoHttpClie
 ### Steps
 
 1. Clone this repository.
-2. Replace the variables in the sketch:
+2. Replace the variables in the sketch, below are instructions for some of them:
 
 - tiltBluetoothAddress: Can be obtained by downloading a BLE scanning app to your phone. Keep the tilt hydrometer near and tilt it a bit so it starts broadcasting. The device should show up as an "ibeacon". Copy the address from that device.
 - brewfatherCustomStreamPath: Can be obtained in your brewfather settings under "Power-ups". Enable it and copy the url.
@@ -53,7 +55,7 @@ Install [ArduinoHttpClient](https://github.com/arduino-libraries/ArduinoHttpClie
 - sendInterval: Interval in ms, should not be less than 900000 for brewfather.
 - debugMode: Logs all actions to serial.
 
-3. Upload it to the Arduino 33 IOT.
+3. Upload it to the Arduino 33 IoT.
 4. Keep your hydrometer near and tilt it a bit so it starts broadcasting.
 5. Device should show up in brewfather device section with the name you selected.
 
