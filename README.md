@@ -18,7 +18,7 @@ This enables me to address all of those inconveniences with one small and compar
 
 The Tilt Hydrometer V2 makes use of ibeacon and communicates through Bluetooth LE. Instead of using the Service and Characteristic method of publishing data to its subscribers, it broadcasts a major and minor value in the manufacturer data. Those two values are extracted and converted into decimal values.
 
-The official [ArduinoBLE library](https://github.com/arduino-libraries/ArduinoBLE) currently does not support reading the devices manufacturer data. I found that [a person with the nick of makisin](https://github.com/makisin) had already made the changes needed and put them in a [pull request](https://github.com/arduino-libraries/ArduinoBLE/pull/53), but this pull request has been unhandled for a year. So I decided to fork the library and add the changes myself to make it easy to clone [Wholteza/ArduinoBLE](https://github.com/Wholteza/ArduinoBLE).
+The official [ArduinoBLE library](https://github.com/arduino-libraries/ArduinoBLE) currently does not support reading the devices manufacturer data. I found that [a person with the nick of makisin](https://github.com/makisin) had already made the changes needed and put them in a [pull request](https://github.com/arduino-libraries/ArduinoBLE/pull/53), but this pull request had been unhandled for a year. So I decided to fork the library and add the changes myself to make it easy to clone [Wholteza/ArduinoBLE](https://github.com/Wholteza/ArduinoBLE).
 
 With the manufacturer data dumped and with some help from a [post on the arduino forums](https://forum.arduino.cc/index.php?topic=626200.0) I discovered the following.
 
