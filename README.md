@@ -12,7 +12,7 @@ The tilt hydrometer v2 makes use of ibeacon that communicates through bluetooth 
 
 ### Requirements
 
-The sketch depends on my fork of the official ArduinoBLE library. This fork adds a method to read the manufacturer data from bluetooth devices. The code for that was taken from a stale pull request on the official libraries pull request section.
+The sketch depends on my fork of the official ArduinoBLE library. This fork adds a method to read the manufacturer data from bluetooth devices. The code for that was taken from an open pull request on the official libraries pull request section that has been ignored for a year. Link is included in the bottom of the readme.
 
 Clone [Wholteza/ArduinoBLE](https://github.com/Wholteza/ArduinoBLE) and place it in your arduino IDE's library directory. Make sure that you don't have the official ArduinoBLE library in there from before.
 
