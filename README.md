@@ -1,22 +1,46 @@
 # Tiltuino
 
-Tiltuino is a project that allows reading of tilt hydrometer v2 temperature and gravity data via BLE and log it to the Brewfather API. The only hardware needed is an Arduino 33 IOT.
+Tiltuino is a [Arduino 33 IoT](https://store.arduino.cc/arduino-nano-33-iot) project that allows collecting measurements from the [Tilt Hydrometer V2](https://tilthydrometer.com/) and log it to the [Brewfather](https://brewfather.app/) API.
+
+The project (apart from the Tilt Hydrometer) requires only the Arduino 33 IoT.
 
 ![](./serial.png)
 
+## Why?
+
+I pretty much only use my Tilt Hydrometer with Brewfather. And the official way of logging with a Raspberry Pi demands that I either dedicate one device fully or that I always ferment in the same area so my Pi Bluetooth is within reach. On top of that I have to update the device, change the sd-card when it fails and deal with other things implied by running a full linux distribution.
+
+This enables me to address all of those inconveniences with one small and compared to the Raspberry Pi (v3-4B), cheap device.
+
 ## How is data read?
 
-The tilt hydrometer v2 makes use of ibeacon that communicates through bluetooth low energy. Instead of using the Service and Characteristic method of publishing data to the subscribers it broadcasts a major and minor value in the manufacturer data. Those two values are extracted and converted into decimal values.
+The Tilt Hydrometer V2 makes use of ibeacon and communicates through Bluetooth LE. Instead of using the Service and Characteristic method of publishing data to its subscribers, it broadcasts a major and minor value in the manufacturer data. Those two values are extracted and converted into decimal values.
+
+The official [ArduinoBLE library](https://github.com/arduino-libraries/ArduinoBLE) currently does not support reading the devices manufacturer data. I found that a guy had already made the needed changes and put them in a [pull request](https://github.com/arduino-libraries/ArduinoBLE/pull/53), but this pull request has been unhandled for a year. So I decided to fork the library and add the changes myself to make it easy to clone [Wholteza/ArduinoBLE](https://github.com/Wholteza/ArduinoBLE).
+
+With the manufacturer data dumped and with some help from a [post on the arduino forums](https://forum.arduino.cc/index.php?topic=626200.0) I discovered the following.
+
+### Breakdown of the manufacturer data
+
+`4c 00 02 15 a4 95 bb 80 c5 b1 4b 44 b5 12 13 70 f0 2d 74 de 00 4e 04 1c 3a`
+
+| Apple beacon | Type (ibeacon constant) | Length (ibeacon constant) |                                     Device UUID | Major (Temperature in farenheit) | Minor (Specific gravity x 1000) | Unknown (Signal strength?) |
+| :----------: | :---------------------: | :-----------------------: | ----------------------------------------------: | :------------------------------: | :-----------------------------: | :------------------------: |
+|    4c 00     |           02            |            15             | a4 95 bb 80 c5 b1 4b 44 b5 12 13 70 f0 2d 74 de |              00 4e               |              04 1c              |             3a             |
+
+Then it was simply a job of grabbing the correct bytes and converting them to decimal values.
+
+### Logging
+
+I made use of the [ArduinoHttpClient](https://github.com/arduino-libraries/ArduinoHttpClient), and built up a request from [Brewfathers custom device documentation](https://docs.brewfather.app/integrations/custom-stream).
 
 ## Getting started
 
 ### Requirements
 
-The sketch depends on my fork of the official ArduinoBLE library. This fork adds a method to read the manufacturer data from bluetooth devices. The code for that was taken from an open pull request on the official libraries pull request section that has been ignored for a year. Link is included in the bottom of the readme.
-
 Clone [Wholteza/ArduinoBLE](https://github.com/Wholteza/ArduinoBLE) and place it in your arduino IDE's library directory. Make sure that you don't have the official ArduinoBLE library in there from before.
 
-Install ArduinoHttpClient and WiFiNINA from the Library Manager in the Arduino IDE.
+Install [ArduinoHttpClient](https://github.com/arduino-libraries/ArduinoHttpClient) and [WiFiNINA](https://github.com/arduino-libraries/WiFiNINA) from the Library Manager in the Arduino IDE.
 
 ### Steps
 
@@ -34,10 +58,3 @@ Install ArduinoHttpClient and WiFiNINA from the Library Manager in the Arduino I
 5. Device should show up in brewfather device section with the name you selected.
 
 - If not: Use the debug mode to see if some part fails.
-
-## Resources
-
-- [ArduinoBLE Repository](https://github.com/arduino-libraries/ArduinoBLE)
-- [ArduinoBLE Manufacturer data pull request](https://github.com/arduino-libraries/ArduinoBLE/pull/53)
-- [Brewfather custom device documentation](https://docs.brewfather.app/integrations/custom-stream)
-- [Old arduino forum post of someone who wanted to do a simular thing](https://forum.arduino.cc/index.php?topic=626200.0)
